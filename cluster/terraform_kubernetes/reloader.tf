@@ -18,7 +18,7 @@ resource "kubernetes_cluster_role" "reloader" {
 
   rule {
     api_groups = ["batch"]
-    resources  = ["cronjobs"]
+    resources  = ["cronjobs","jobs"]
     verbs      = ["list", "get", "watch"]
   }
 
