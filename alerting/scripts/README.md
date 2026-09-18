@@ -1,5 +1,4 @@
 # Scripts
-
 ## test-logicapp.sh
 This can be used to send an alert payload to a Logic App. To use copy the Logic App Workflow URL from the Logic App in the Azure Portal and export or set the CALLBACK_URL.
 `export CALLBACK_URL="<URL>"`
@@ -28,16 +27,20 @@ This script can be used to (re-)produce the short code to Teams channel mapping 
 To re-generate, export the list to a csv, trim down to only columns `Name,Shortname,Alertchannel` and remove spaces from the column names.
 Save in the scripts folder naming the file `actiongroups.csv`
 
+The script also removes duplicate mapping items when `shortCode`, `channelId` and `channelGroupId` all match. Items with the same `shortCode` but different channel values are excluded from the mapping and written to `shortcode_mapping_deduplication_exceptions.json` for manual resolution.
+
+This will produce a `shortcode_mapping.json` file which is the `short_code_to_channel` element, manually copy and paste this into the desired environments keyvault (check `cluster_kv` value in `alerting/terraform_logic_app/config/<env>.json`) as a new version for secret `SHORT-CODE-TO-TEAMS-CHANNEL`. Drop the enclosing `short_code_to_channel` json element, only adding the list element.
+
 The script uses these predfined values for input and output files.
 ```
 INPUT_CSV="servicelist.csv"
 OUTPUT_JSON="shortcode_mapping.json"
 EXCEPTIONS_FILE="shortcode_mapping_exceptions.csv"
+DEDUPLICATION_EXCEPTIONS_FILE="shortcode_mapping_deduplication_exceptions.json"
 ```
 
 run `./servicelist-to-json.sh`
 
-This will produce a `shortcode_mapping.json` file which is the `short_code_to_channel` element, manually copy and paste this into the desired environments keyvault (check `cluster_kv` value in `alerting/terraform_logic_app/config/<env>.json`) as a new version for secret `SHORT-CODE-TO-TEAMS-CHANNEL`. Drop the enclosing `short_code_to_channel` json element, only adding the list element.
 eg
 ```json
 [
@@ -65,17 +68,18 @@ DO NOT USE: &darr;
             "shortCode": "code1",
             "channelId": "xxxxxxxx",
             "channelGroupId": "yyyyyyy",
-            "displayName": "Service Name 1"
+            "displayName": "DO NOT USE"
         },
         {
             "shortCode": "code2",
             "channelId": "xxxxxxxx",
             "channelGroupId": "yyyyyyy",
-            "displayName": "Service Name 2"
+            "displayName": "DO NOT USE"
         }
     ]
 }
 
 ```
  DO NOT USE: &uarr;
+
 
