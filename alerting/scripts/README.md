@@ -31,7 +31,7 @@ The script also removes duplicate mapping items when `shortCode`, `channelId` an
 
 This will produce a `shortcode_mapping.json` file which is the `short_code_to_channel` element, manually copy and paste this into the desired environments keyvault (check `cluster_kv` value in `alerting/terraform_logic_app/config/<env>.json`) as a new version for secret `SHORT-CODE-TO-TEAMS-CHANNEL`. Drop the enclosing `short_code_to_channel` json element, only adding the list element.
 
-The script uses these predfined values for input and output files.
+The script uses these predefined values for input and output files.
 ```
 INPUT_CSV="servicelist.csv"
 OUTPUT_JSON="shortcode_mapping.json"
